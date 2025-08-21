@@ -4,6 +4,64 @@ const __dirname = import.meta.dirname;
 import {createRequire} from "node:module";
 const require = createRequire(import.meta.url);
 
+const os_administrator_command_prefix = "sudo";
+
+
+// server administration dependancies
+
+const { spawn } = require("node:process");
+
+
+// server administration functions
+
+function run_command(method, args) {
+    
+    let child_process = spawn([(method), (args)], {detached: true, shell: true, windowsHide: true});
+    let command_result;
+    child_process.stdout.on("data", function(data) {
+
+        command_result = data;
+        
+    });
+    child_process.exit();
+
+    return command_result;
+      
+};
+
+// firewall functions
+function run_ufw_command(args) {
+    
+    run_command("ufw", args);
+    
+};
+function run_ufw_administrator_mode_command(args) {
+
+    run_command(os_administrator_command_prefix, ["ufw", (args)]);
+    
+};
+function run_iptables_command(args) {
+    
+    run_command("iptables", args);
+    
+};
+function run_iptables_administrator_mode_command(args) {
+
+    run_command(os_administrator_command_prefix, ["iptables", (args)]);
+    
+};
+
+function run_apt_command(args) {
+    
+    run_command("apt", args);
+    
+};
+function run_apt_administrator_mode_command(args) {
+
+    run_command(os_administrator_command_prefix, ["apt", (args)]) {};
+    
+};
+
 
 // global dependancies
 

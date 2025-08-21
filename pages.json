@@ -1,0 +1,30 @@
+{
+
+    "banned": {
+
+        "page": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset='utf-8'>\n        <script></script>\n        <style></style>\n    </head>\n    <body>\n    </body>\n    <footer>\n    </footer>\n</html>"
+        
+    },
+    "honeypot": {
+
+
+        
+    },
+    "private": {
+
+
+        
+    },
+    "public": {
+
+        "/": "",
+        "/about": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset='utf-8'\n        <script></script>\n        <style></style>\n    </head>\n    <body>\n        \n    </body>\n    <footer>\n    </footer>\n</html>"
+        
+    },
+    "whitelisted": {
+
+        
+        
+    }
+    
+}

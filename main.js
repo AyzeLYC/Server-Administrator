@@ -105,21 +105,68 @@ var server_configuration = {
         keepAliveTimeout: 300
         
     },
-    "web_pages": {
+    "web-pages": {
         
         "public": {
-            
-            "/": {}
+
+            "/": `<!DOCTYPE html>
+<html>
+    
+    <head>
+
+        <meta charset="utf-8">
+        <script>
+        </script>
+        <style>
+        </style>
+        
+    </head>
+    <body>
+        
+        <p>Welcome</p>
+        
+    </body>
+    <footer>
+        
+    </footer>
+    
+</html>`
             
         },
-        "whitelisted": {
+        "public-api": {
             
-            
+            "/api/": {
+                
+                "headers": {
+    
+    
+    "Content-Type": "application/json",
+    "Encoding": "utf-8"
+},
+                "function": function (request_datas) {
+
+                    let request_url = new URL(`https://localhost${request_datas.url}`);
+                    
+                    if (request_url.pathname === "/api/v1") {
+                        
+                        
+                        
+                    };
+                    
+                }
+                
+            }
             
         },
+        "whitelisted": {},
+        "whitelisted-api": {},
+        "private": {},
+        "private-api": {},
+        "honeypot": {},
+        "honeypot-api": {},
         "banned": {
-
-
+            
+            "page": "<!DOCTYPE html><html><head></head><body></body><footer></footer></html>"
             
         }
         

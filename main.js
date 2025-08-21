@@ -4,7 +4,7 @@ const __dirname = import.meta.dirname;
 import {createRequire} from "node:module";
 const require = createRequire(import.meta.url);
 
-const os_administrator_command_prefix = "sudo";
+const os_administrator_command_prefix = "sudo"; // change it to the one of your OS
 
 
 // server administration dependancies

@@ -89,10 +89,10 @@ var server_configuration = {
 
             db: "server",
             host: "localhost",
-            password: "set your password here",
+            password: "set your DataBase password here",
             port: 28015,
             timeout: 120,
-            user: "set your username here"
+            user: "set your DataBase username here"
             
         }
         

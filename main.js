@@ -9,7 +9,6 @@ const os_administrator_command_prefix = "sudo"; // change it to the one of your 
 
 // server administration functions
 
-
 // run commands functions
 
 function run_command(method, args) {
@@ -28,7 +27,6 @@ function run_command(method, args) {
     return command_result;
       
 };
-
 
 // firewalls functions
 
@@ -53,7 +51,6 @@ function run_iptables_administrator_mode_command(args) {
     
 };
 
-
 // updates functions
 
 function run_apt_command(args) {
@@ -66,6 +63,7 @@ function run_apt_administrator_mode_command(args) {
     run_command(os_administrator_command_prefix, ["apt", (args)]);
     
 };
+
 
 
 // global dependancies
@@ -109,6 +107,12 @@ var server_configuration = {
         keepAliveTimeout: 300
         
     },
+    "owner": {
+
+        "name": "",
+        "address": "", // optional datas, only use it if you are a medium / big sized company with good lawyers
+        
+    },
     "web-pages": {
         
         "public": {
@@ -127,7 +131,8 @@ var server_configuration = {
     </head>
     <body>
         
-        <p>Welcome</p>
+        <p>Welcome on AyzeLYC's Server Administrator !</p>
+        <p>This server is owned by ${server_configuration["owner"]["name"]}</p>
         
     </body>
     <footer>

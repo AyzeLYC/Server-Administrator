@@ -9,6 +9,9 @@ const os_administrator_command_prefix = "sudo"; // change it to the one of your 
 
 // server administration functions
 
+
+// run commands functions
+
 function run_command(method, args) {
     
     let { spawn } = require("node:process");

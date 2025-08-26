@@ -7,29 +7,28 @@ const require = createRequire(import.meta.url);
 const os_administrator_command_prefix = "sudo"; // change it to the one of your OS
 
 
-// server administration dependancies
-
-const { spawn } = require("node:process");
-
-
 // server administration functions
 
 function run_command(method, args) {
     
+    let { spawn } = require("node:process");
+    
     let child_process = spawn([(method), (args)], {detached: true, shell: true, windowsHide: true});
     let command_result;
-    child_process.stdout.on("data", function(data) {
+        child_process.stdout.on("data", function(data) {
 
-        command_result = data;
+            command_result = data;
         
-    });
-    child_process.exit();
+        });
+        child_process.exit();
 
     return command_result;
       
 };
 
-// firewall functions
+
+// firewalls functions
+
 function run_ufw_command(args) {
     
     run_command("ufw", args);
@@ -71,8 +70,6 @@ const crypto = await import("node:crypto"),
       https = await import("node:https");
 
 const cloudflare = await import("cloudflare");
-
-const rethinkdb = require("rethinkdb");
 
 
 // server functions and variables
@@ -177,10 +174,22 @@ var server_configuration = {
 var web_server,
     database_client;
 
-if (server_configuration["database"]["app"] === "RethinkDB") {
+if (server_configuration["database"]["app"] === "PostgresDB") {
+
+    db = require("Postgres");
     
-    database_client = rethinkdb;
+};
+if (server_configuration["database"]["app"] === "RethinkDB") {
+
+    db = require("rethinkdb");
+    
+    database_client = db;
     database_client.connect();
+    
+};
+if (server_configuration["database"]["app"] === "") {
+
+    
     
 };
 

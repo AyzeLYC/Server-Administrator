@@ -1,10 +1,10 @@
 // global variables
 
 const __dirname = import.meta.dirname;
-import {createRequire} from "node:module";
+import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
-const os_administrator_command_prefix = "sudo"; // change it to the one of your OS
+const os_administrator_command_prefix = "sudo"; // change it to the one of your OS if it isn't sudo
 
 
 // server administration functions
@@ -13,8 +13,8 @@ function run_command(method, args) {
     
     let { spawn } = require("node:process");
     
-    let child_process = spawn([(method), (args)], {detached: true, shell: true, windowsHide: true});
     let command_result;
+    let child_process = spawn([(method), (args)], {detached: true, shell: true, windowsHide: true});
         child_process.stdout.on("data", function(data) {
 
             command_result = data;
@@ -50,6 +50,9 @@ function run_iptables_administrator_mode_command(args) {
     
 };
 
+
+// updates functions
+
 function run_apt_command(args) {
     
     run_command("apt", args);
@@ -57,19 +60,20 @@ function run_apt_command(args) {
 };
 function run_apt_administrator_mode_command(args) {
 
-    run_command(os_administrator_command_prefix, ["apt", (args)]) {};
+    run_command(os_administrator_command_prefix, ["apt", (args)]);
     
 };
 
 
 // global dependancies
 
-const crypto = await import("node:crypto"),
-      fs = await import("node:fs"),
-      http = await import("node:http"),
-      https = await import("node:https");
+const crypto = require("node:crypto"),
+      domain = require("node:domain"),
+      fs = require("node:fs"),
+      http = require("node:http"),
+      https = require("node:https");
 
-const cloudflare = await import("cloudflare");
+const cloudflare = require("cloudflare");
 
 
 // server functions and variables
@@ -187,7 +191,7 @@ if (server_configuration["database"]["app"] === "RethinkDB") {
     database_client.connect();
     
 };
-if (server_configuration["database"]["app"] === "") {
+if (server_configuration["database"]["app"] === "JSON") {
 
     
     

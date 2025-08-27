@@ -134,9 +134,9 @@ var server_configuration = {
 var web_server,
     database_client;
 
-if (server_configuration["database"]["app"] === "PostgreSQL") {
+if (server_configuration["database"]["app"] === "rethinkdb") {
 
-    db = require("Postgres");
+    db = require("rethinkdb");
 
     database_client = db;
     database_client.connect();
@@ -151,12 +151,11 @@ if (server_configuration["database"]["app"] === "PostgreSQL") {
     server_configuration["web-pages"]["honeypot-api"] = await database_client.db("Server-Administrator-Pages").table("honepot-api").getAll();
     
 };
-if (server_configuration["database"]["app"] === "RethinkDB") {
+if (server_configuration["database"]["app"] === "PostgreSQL") {
 
-    db = require("rethinkdb");
+    db = require("postgres");
     
     database_client = db;
-    database_client.connect();
     
 };
 if (server_configuration["database"]["app"] === "JSON") {

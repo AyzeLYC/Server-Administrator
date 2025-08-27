@@ -24,7 +24,7 @@ function run_command(method, args) {
         });
         child_process.exit();
 
-    return command_result;
+    console.log(`Used command ${method} ${args} !\n Command result : ${command_result}`);
       
 };
 
@@ -35,7 +35,7 @@ function run_ufw_command(args) {
     run_command("ufw", args);
     
 };
-function run_ufw_administrator_mode_command(args) {
+function run_ufw_administrator_enabled_command(args) {
 
     run_command(os_administrator_command_prefix, ["ufw", (args)]);
     
@@ -45,7 +45,7 @@ function run_iptables_command(args) {
     run_command("iptables", args);
     
 };
-function run_iptables_administrator_mode_command(args) {
+function run_iptables_administrator_enabled_command(args) {
 
     run_command(os_administrator_command_prefix, ["iptables", (args)]);
     
@@ -58,9 +58,22 @@ function run_apt_command(args) {
     run_command("apt", args);
     
 };
-function run_apt_administrator_mode_command(args) {
+function run_apt_administrator_enabled_command(args) {
 
     run_command(os_administrator_command_prefix, ["apt", (args)]);
+    
+};
+
+// networking logs functions
+
+function run_netstat_v_command() {
+
+    run_command("netstat", ["-v"]);
+    
+};
+function run_netstat_v_administrator_enabled_command() {
+
+    run_command(os_administrator_command_prefix, ["netstat", "-v"]);
     
 };
 

@@ -131,14 +131,11 @@ var server_configuration = {
     
 };
 
-var web_server,
-    database_client;
-
 if (server_configuration["database"]["app"] === "rethinkdb") {
 
-    db = require("rethinkdb");
+    let db = require("rethinkdb");
 
-    database_client = db;
+    let database_client = db;
     database_client.connect();
 
     server_configuration["web-pages"]["public"] = await database_client.db("Server-Administrator-Pages").table("public").getAll();
@@ -153,15 +150,15 @@ if (server_configuration["database"]["app"] === "rethinkdb") {
 };
 if (server_configuration["database"]["app"] === "PostgreSQL") {
 
-    db = require("postgres");
+    let db = require("postgres");
     
-    database_client = db({
+    let database_client = db({
         
-        host: "", // IP Address or Domain Name of the PostgreSQL DataBase
-        pass: "", // PostgreSQL user password
-        port: 0, // PostgreSQL DataBase port,
+        host: "", // put your PostgreSQL DataBase IP Address or Domain between the ""
+        pass: "", // put your PostgreSQL DataBase user password between the ""
+        port: 0, // replace the 0 with your PostgreSQL DataBase port
         ssl: "require",
-        user: "" // username
+        user: "" // put your PostgreSQL DataBase username between the ""
         
     });
     
@@ -173,6 +170,29 @@ if (server_configuration["database"]["app"] === "PostgreSQL") {
     server_configuration["web-pages"]["private-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "private-api"`);
     server_configuration["web-pages"]["honeypot"] = await database_client(`SELECT * FROM web-pages WHERE type == "honeypot"`);
     server_configuration["web-pages"]["honeypot-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "honeypot-api"`);
+    
+};
+if (server_configuration["database"]["app"] === "MySQL") {
+
+    let db = require("mysql");
+
+    let database_client = db({
+
+        host: "", // put your MySQL DataBase IP Address or Domain Name between the ""
+        password: "", // put your MySQL DataBase password between the ""
+        port: 0, // replace the 0 with the Port that is used by your MySQL DataBase
+        user: "", // put your MySQL DataBase username between the ""
+        
+    });
+
+    server_configuration["web-pages"]["public"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "public"`);
+    server_configuration["web-pages"]["public-api"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "public-api"`);
+    server_configuration["web-pages"]["banned"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "banned"`);
+    server_configuration["web-pages"]["banned-api"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "banned-api"`);
+    server_configuration["web-pages"]["private"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "private"`);
+    server_configuration["web-pages"]["private-api"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "private-api"`);
+    server_configuration["web-pages"]["honeypot"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "honeypot"`);
+    server_configuration["web-pages"]["honeypot-api"] = await database_client.query(`SELECT * FROM web-pages WHERE type === "honeypot-api"`);
     
 };
 if (server_configuration["database"]["app"] === "JSON") {
@@ -262,6 +282,8 @@ express_app.use(function(req, res) {
     
 });
 
+
+var web_server;
 
 if (server_configuration["server"]["secure"] === true) {
 

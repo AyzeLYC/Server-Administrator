@@ -126,82 +126,29 @@ var server_configuration = {
         "address": "", // optional datas, only use it if you are a medium / big sized company with good lawyers
         
     },
-    "web-pages": {
-        
-        "public": {
-
-            "/": `<!DOCTYPE html>
-<html>
-    
-    <head>
-
-        <meta charset="utf-8">
-        <script>
-        </script>
-        <style>
-        </style>
-        
-    </head>
-    <body>
-        
-        <p>Welcome on AyzeLYC's Server Administrator !</p>
-        <p>This server is owned by ${server_configuration["owner"]["name"]}</p>
-        
-    </body>
-    <footer>
-        
-    </footer>
-    
-</html>`
-            
-        },
-        "public-api": {
-            
-            "/api/": {
-                
-                "headers": {
-    
-    
-    "Content-Type": "application/json",
-    "Encoding": "utf-8"
-},
-                "function": function (request_datas) {
-
-                    let request_url = new URL(`https://localhost${request_datas.url}`);
-                    
-                    if (request_url.pathname === "/api/v1") {
-                        
-                        
-                        
-                    };
-                    
-                }
-                
-            }
-            
-        },
-        "whitelisted": {},
-        "whitelisted-api": {},
-        "private": {},
-        "private-api": {},
-        "honeypot": {},
-        "honeypot-api": {},
-        "banned": {
-            
-            "page": "<!DOCTYPE html><html><head></head><body></body><footer></footer></html>"
-            
-        }
-        
-    }
+    "staff": {},
+    "web-pages": {}
     
 };
 
 var web_server,
     database_client;
 
-if (server_configuration["database"]["app"] === "PostgresDB") {
+if (server_configuration["database"]["app"] === "PostgreSQL") {
 
     db = require("Postgres");
+
+    database_client = db;
+    database_client.connect();
+
+    server_configuration["web-pages"]["public"] = await database_client.db("Server-Administrator-Pages").table("public").getAll();
+    server_configuration["web-pages"]["public-api"] = await database_client.db("Server-Administrator-Pages").table("public-api").getAll();
+    server_configuration["web-pages"]["banned"] = await database_client.db("Server-Administrator-Pages").table("banned").getAll();
+    server_configuration["web-pages"]["banned-api"] = await database_client.db("Server-Administrator-Pages").table("banned-api").getAll();
+    server_configuration["web-pages"]["private"] = await database_client.db("Server-Administrator-Pages").table("private").getAll();
+    server_configuration["web-pages"]["private-api"] = await database_client.db("Server-Administrator-Pages").table("private-api").getAll();
+    server_configuration["web-pages"]["honeypot"] = await database_client.db("Server-Administrator-Pages").table("honeypot").getAll();
+    server_configuration["web-pages"]["honeypot-api"] = await database_client.db("Server-Administrator-Pages").table("honepot-api").getAll();
     
 };
 if (server_configuration["database"]["app"] === "RethinkDB") {
@@ -214,79 +161,80 @@ if (server_configuration["database"]["app"] === "RethinkDB") {
 };
 if (server_configuration["database"]["app"] === "JSON") {
 
-    
+    server_configuration["web-pages"] = require("web-pages.json");
     
 };
 
 var express_app = express();
+
 express_app.use(function(req, res) {
     
     let request_url = new URL(`https://localhost${req.url}`);
     
-    let remote_ip_address_banned = await database_client.db("IP-Addresses").table("banned").contains(req.socket.remoteAddress);
+    let remote_ip_address_banned = server_configuration["IP-Addresses"]["banneed"][(req.socket.remoteAddress)],
+        remote_ip_address_staff_owned = server_configuration["IP-Addresses"]["staf"][(req.socket.remoteAddress)];
     
     let page_datas = "";
     
-    
     if (remote_ip_address_banned) {
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("banned").contains("page");
+        page_datas = server_configuration["web-pages"]["banned"]["default"];
         page_datas["end"] = null;
         
     };
     
     
-    if (!remote_ip_address_banned /* if the IP Address is not banned */ && await database_client.db("Server-Administrator-Pages").table("public").contains(request_url.pathname)) {
+    if (!remote_ip_address_banned /* if the IP Address is not banned */ && server_configuration["web-pages"]["public"][(request_url.pathname)]) {
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("public").get(request_url.pathname);
+        page_datas = server_configuration["web-pages"]["public"][(request_url.pathname)];
         page_datas["end"] = null;
         
     };
-    if (!remote_ip_address_banned && await database_client.db("Server-Administrator-Pages").table("public-api").contains(request_url.pathname)) {
+    if (!remote_ip_address_banned && server_configuration["web-pages"]["public-api"][(request_url.pathname]) {
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("public-api").get(request_url.pathname);
-        page_datas["end"] = await page_datas["function"](req);
-        
-    };
-    
-    if (!remote_ip_address_banned && await database_client.db("IP-Addresses").table("staff").contains(req.socket.remoteAddress) /* if the remote IP Address is contained in the STAFF members ip addresses list */ && await database_client.db("Server-Administrator-Pages").table("private").contains(request_url.pathname)) {
-        
-        page_datas = await database_client.db("Server-Administrator-Pages").table("private").get(request_url.pathname);
-        page_datas["end"] = null;
-        
-    };
-    if (!remote_ip_address_banned && !(await database_client.db("IP-Addresses").table("staff").contains(req.socket.remoteAddress)) /* if the remote IP Address is not contained in the STAFF members ip addresses list */ && await database_client.db("Server-Administrator-Pages").table("private").contains(request_url.pathname)) {
-        
-        page_datas = await database_client.db("Server-Administrator-Pages").table("banned").get("page");
-        page_datas["end"] = null;
-        
-        await database_client.db("IP-Addresses").table("banned").insert(req.socket.remoteAddress);
-        
-    };
-    if (!remote_ip_address_banned && await database_client.db("IP-Addresses").table("staff").contains(req.socket.remoteAddress) && await database_client.db("Server-Administrator-Pages").table("private-api").contains(request_url.pathname)) {
-
-        page_datas = await database_client.db("Server-Administrator-Pages").table("private-api").get(request_url.pathname);
+        page_datas = server_configuration["web-pages"]["public-api"][(request_url.pathname)];
         page_datas["end"] = page_datas["function"](req);
         
     };
-    if (!remote_ip_address_banned && !(await database_client.db("IP-Addresses").table("staff").contains(req.socket.remoteAddress)) && await database_client.db("Server-Administrator-Pages").table("private-api").contains(request_url.pathname)) {
+    
+    if (!remote_ip_address_banned && remote_ip_address_staff_owned /* if the remote IP Address is contained in the STAFF members ip addresses list */ && server_configuration["web-pages"]["private"][(request_url.pathname)]) {
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("banned").get("page");
+        page_datas = server_configuration["web-pages"]["staff"][(request_url.pathname)];
+        page_datas["end"] = null;
+        
+    };
+    if (!remote_ip_address_banned && !remote_ip_address_staff_owned /* if the remote IP Address is not contained in the STAFF members ip addresses list */ && server_configuration["web-pages"]["private"][(request_url.pathname)]) {
+        
+        page_datas = server_configuration["web-pages"]["banned"]["default"];
         page_datas["end"] = null;
 
-        await database_client.db("IP-Addresses").table(banned).insert(req.socket.remoteAddress);
+        server_configuration["IP-Addresses"]["banned"].push(req.socket.remoteAddress);
         
     };
-  
-    if (!remote_ip_address_banned && await database_client.db("Server-Administrator-Pages").table("honeypot").contains(request_url.pathname)) {
+    if (!remote_ip_address_banned && remote_ip_address_staff_owned && server_configuration["web-pages"]["private-api"][(request_url.pathname)]) {
+
+        page_datas = server_configuration["web-pages"]["private-api"][(request_url.pathname)];
+        page_datas["end"] = page_datas["function"](req);
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("honeypot").get(request_url.pathname);
+    };
+    if (!remote_ip_address_banned && !remote_ip_address_staff_owned && server_configuration["web-pages"]["private-api"][(request_url.pathname)]) {
+        
+        page_datas = server_configuration["web-pages"]["banned"]["default"];
+        page_datas["end"] = null;
+
+        server_configuration["IP-Addressees"]["banned"].push(req.socket.remoteAddress);
+        
+    };
+    
+    if (!remote_ip_address_banned && !remote_ip_address_staff_owned && server_configuration["web-pages"]["honeypot"][(request_url.pathname)]) {
+        
+        page_datas = server_configuration["web-pages"]["honeypot"][(request_url.pathname)];
         page_datas["end"] = null;
         
     };
-    if (!remote_ip_address_banned && await database_client.db("Server-Administrator-Pages").table("honeypot-api").contains(request_url.pathname)) {
+    if (!remote_ip_address_banned && !remote_ip_address_staff_owned && server_configuration["web-pages"]["honeypot-api"][(request_url.pathname)]) {
         
-        page_datas = await database_client.db("Server-Administrator-Pages").table("honeypot-api").get(request_url.pathname);
+        page_datas = server_configuration["web-pages"]["honeypot-api"][(request_url.pathname));
         page_datas["end"] = page_datas["function"](req);
         
     };
@@ -297,6 +245,7 @@ express_app.use(function(req, res) {
     res.end(page_datas["end"]);
     
 });
+
 
 if (server_configuration["server"]["secure"] === true) {
 

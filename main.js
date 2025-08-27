@@ -155,7 +155,24 @@ if (server_configuration["database"]["app"] === "PostgreSQL") {
 
     db = require("postgres");
     
-    database_client = db;
+    database_client = db({
+        
+        host: "", // IP Address or Domain Name of the PostgreSQL DataBase
+        pass: "", // PostgreSQL user password
+        port: 0, // PostgreSQL DataBase port,
+        ssl: "require",
+        user: "" // username
+        
+    });
+    
+    server_configuration["web-pages"]["public"] = await database_client(`select * from web-pages where type == "public"`);
+    server_configuration["web-pages"]["public-api"] = await database_client(`select * from web-pages where type == "public-api"`);
+    server_configuration["web-pages"]["banned"] = await database_client(`select * from web-pages where type == "banned"`);
+    server_configuration["web-pages"]["banned-api"] = await database_client(`select * from web-pages where type == "banned-api"`);
+    server_configuration["web-pages"]["private"] = await database_client(`select * from web-pages where type == "private"`);
+    server_configuration["web-pages"]["private-api"] = await database_client(`select * from web-pages where type == "private-api"`);
+    server_configuration["web-pages"]["honeypot"] = await database_client(`select * from web-pages where type == "honeypot"`);
+    server_configuration["web-pages"]["honeypot-api"] = await database_client(`select * from web-pages where type == "honeypot-api"`);
     
 };
 if (server_configuration["database"]["app"] === "JSON") {

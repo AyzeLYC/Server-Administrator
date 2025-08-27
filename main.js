@@ -165,14 +165,14 @@ if (server_configuration["database"]["app"] === "PostgreSQL") {
         
     });
     
-    server_configuration["web-pages"]["public"] = await database_client(`select * from web-pages where type == "public"`);
-    server_configuration["web-pages"]["public-api"] = await database_client(`select * from web-pages where type == "public-api"`);
-    server_configuration["web-pages"]["banned"] = await database_client(`select * from web-pages where type == "banned"`);
-    server_configuration["web-pages"]["banned-api"] = await database_client(`select * from web-pages where type == "banned-api"`);
-    server_configuration["web-pages"]["private"] = await database_client(`select * from web-pages where type == "private"`);
-    server_configuration["web-pages"]["private-api"] = await database_client(`select * from web-pages where type == "private-api"`);
-    server_configuration["web-pages"]["honeypot"] = await database_client(`select * from web-pages where type == "honeypot"`);
-    server_configuration["web-pages"]["honeypot-api"] = await database_client(`select * from web-pages where type == "honeypot-api"`);
+    server_configuration["web-pages"]["public"] = await database_client(`SELECT * FROM web-pages WHERE type == "public"`);
+    server_configuration["web-pages"]["public-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "public-api"`);
+    server_configuration["web-pages"]["banned"] = await database_client(`SELECT * FROM web-pages WHERE type == "banned"`);
+    server_configuration["web-pages"]["banned-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "banned-api"`);
+    server_configuration["web-pages"]["private"] = await database_client(`SELECT * FROM web-pages WHERE type == "private"`);
+    server_configuration["web-pages"]["private-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "private-api"`);
+    server_configuration["web-pages"]["honeypot"] = await database_client(`SELECT * FROM web-pages WHERE type == "honeypot"`);
+    server_configuration["web-pages"]["honeypot-api"] = await database_client(`SELECT * FROM web-pages WHERE type == "honeypot-api"`);
     
 };
 if (server_configuration["database"]["app"] === "JSON") {

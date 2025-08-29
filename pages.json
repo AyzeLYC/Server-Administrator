@@ -40,6 +40,7 @@
 
         "/api/v1": {
 
+            "status": 200,
             "headers": {"content-type": "application/json", "encoding": "utf-8"},
             "body": "",
             "function": function(request) {
@@ -85,7 +86,8 @@
 
                 if (!parsed_request_body["method"]) {
                     
-                    
+                    server_configuration["web-pages"]["public-api"]["status"] = 404;
+                    server_configuration["web-pages"]["public-api"]["end"] = {"error": "Your request didn't contain the API method you wanted to use !"};
                     
                 };
                 

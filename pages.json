@@ -5,12 +5,27 @@
         "page": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset='utf-8'>\n        <script></script>\n        <style></style>\n    </head>\n    <body>\n    </body>\n    <footer>\n    </footer>\n</html>"
         
     },
+    "banned-api": {
+
+
+        
+    },
     "honeypot": {
 
 
         
     },
+    "honeypot-api": {
+
+
+        
+    },
     "private": {
+
+
+        
+    },
+    "private-api": {
 
 
         
@@ -21,9 +36,72 @@
         "/about": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset='utf-8'\n        <script></script>\n        <style></style>\n    </head>\n    <body>\n        \n    </body>\n    <footer>\n    </footer>\n</html>"
         
     },
+    "public-api": {
+
+        "/api/v1": {
+
+            "headers": {"content-type": "application/json", "encoding": "utf-8"},
+            "body": "",
+            "function": function(request) {
+
+                let request_body = "";
+                    parsed_request_body = "";
+
+                req.on("data", function(data) {
+
+                    request_body += data;
+                    
+                });
+
+                req.on("end", function() {
+
+                    try {
+
+                        parsed_request_body = JSON.parse(request_body);
+                        
+                    } catch(err) {
+
+                        console.log(`An error has happened while trying to parse the datas received in the ${request.method} request from ${request.socket.remoteAddress} !\nError : ${err}`);
+                        
+                    };
+                    
+                });
+
+                if (parsed_request_body["method"] === "contact") {
+
+                    
+                    
+                };
+                if (parsed_request_body["method"] === "") {
+
+
+                    
+                };
+                if (parsed_request_body["method"] === "stats") {
+
+                    
+                    
+                };
+
+                if (!parsed_request_body["method"]) {
+                    
+                    
+                    
+                };
+                
+            }
+            
+        }
+        
+    },
     "whitelisted": {
 
         
+        
+    },
+    "whitelisted-api": {
+
+
         
     }
     

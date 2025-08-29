@@ -197,7 +197,7 @@ if (server_configuration["database"]["app"] === "MySQL") {
 };
 if (server_configuration["database"]["app"] === "JSON") {
 
-    server_configuration["web-pages"] = require("web-pages.json");
+    server_configuration["web-pages"] = require("./web-pages.json");
     
 };
 
